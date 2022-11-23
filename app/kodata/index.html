@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>KubeDay Japan Simple App</title>
+    <style>
+        html, body {
+
+            font-family: sans-serif;
+            color: #001524;
+            font-size: 20px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        h1, h2 {
+            font-weight: bold;
+        }
+
+        button {
+            font-size: 40px;
+            padding: 20px;
+            border-radius: 50%;
+            color: #001524;
+        }
+        button:hover {
+            color: white;
+            background-color: #001524;
+        }
+
+        .content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10vh;
+            word-wrap: anywhere;
+            font-family: monospace;
+            background-color: #FBF8CC;
+        }
+
+        .image img {
+            object-fit: contain;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+
+        function getValue() {
+
+            console.log("generating random value");
+            const color = ["#FFCFD2", "#F1C0E8","#CFBAF0","#A3C4F3", "#90DBF4", "#98F5E1", "#8EECF5", "#98F5E1" , "#FFCFD2", "#F1C0E8" ];
+            document.getElementById("inputText").style.backgroundColor = color[Math.floor(Math.random() * 10)];
+            document.getElementById("inputText").innerHTML = Math.floor(Math.random() * 10000);
+
+        }
+
+        function storeValue() {
+            console.log("store value");
+            var xmlHttp = new XMLHttpRequest();
+            var valueToStore = document.getElementById("inputText").innerHTML;
+            console.log("value to store: " + valueToStore);
+            xmlHttp.open("POST", "/store?value="+valueToStore, false);
+            xmlHttp.send(null);
+            getStoredValues();
+            getValue();
+        }
+
+        
+
+        function getStoredValues() {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", "/values", false);
+            xmlHttp.send(null);
+            document.getElementById("storedValuesText").innerHTML = xmlHttp.responseText;
+        }
+
+        function clearStoredValues() {
+            console.log("Clearing old values");
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("DELETE", "/clear", false);
+            xmlHttp.send(null);
+            getStoredValues();
+        }
+
+
+    </script>
+</head>
+<body onload="getStoredValues();">
+<div class="content">
+
+    <div>
+      Click the button to obtain value
+        <button id="getValueBtn" onclick="getValue()">Get Value</button>
+    </div>
+    <div>
+        <h1>Commit Value to Database</h1>
+        <div id="inputText" style="padding: 5vh 0; font-style: italic;">
+            
+        </div>
+    </div>
+    <div>
+        <button onclick="storeValue()">Store Value</button>
+        <button onclick="getValue()">Discard Value</button>
+    </div>
+
+    <div>
+        <h3>Stored Values</h3>
+        <div id="storedValuesText"></div>
+        <button onclick="clearStoredValues()">Clear</button>
+    </div>
+
+</div>
+</body>
+</html>
