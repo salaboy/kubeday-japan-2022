@@ -84,8 +84,8 @@ Feel free to open the function using your favourite IDE or editor.
 We need to make sure that the function can connect to our database, hence we need to add a new environment variable with the REDIS_PASSWORD and REDIS_HOST.
 
 ```
-func config envs add --name=REDIS_HOST --value='my-redis-master:6379'
-func config envs add --name=REDIS_PASSWORD --value='{{ secret:my-redis:redis-password }}'
+func config envs add --name=REDIS_HOST --value='kubeday-japan-app-redis-master:6379'
+func config envs add --name=REDIS_PASSWORD --value='{{ secret:kubeday-japan-app-redis:redis-password }}'
 ```
 
 We can deploy this function to our development environment by running: 
