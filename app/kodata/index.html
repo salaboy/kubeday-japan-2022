@@ -5,26 +5,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>KubeDay Japan Simple App</title>
+    <title>KubeDay Japan App</title>
     <style>
+        :root {
+            --background-color: #FFFFFF;
+            --secondary-background-color: #d3d5d9;
+            --text-color: #212326;
+            --main-color: #326be3;
+        }
+        * {
+            box-sizing: border-box;
+        }
         html, body {
-
+            background-color: var(--main-color);
             font-family: sans-serif;
-            color: #001524;
+            color: var(--text-color);
             font-size: 20px;
             line-height: 1.5;
             text-align: center;
+            padding: 0;
+            margin: 0;
         }
+        .background {
+            position: fixed;
+            z-index: 2;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
 
+        }
+        .background img{
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            opacity: .2;
+        }
+        .layout {
+            display: flex;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+        .layout .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px 40px 0;
+        }
         h1, h2 {
             font-weight: bold;
+        }
+        h3 {
+            font-size: 25px;
+            text-transform: uppercase;
         }
 
         button {
             font-size: 40px;
             padding: 20px;
-            border-radius: 50%;
-            color: #001524;
+            border-radius: 10px;
+            color: var(--background-color);
+            background-color: var(--main-color);
+            border: none;
+            width: 100%;
         }
         button:hover {
             color: white;
@@ -32,12 +78,46 @@
         }
 
         .content {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 10vh;
-            word-wrap: anywhere;
-            font-family: monospace;
-            background-color: #FBF8CC;
+
+            padding: 40px;
+            height: 100%;
+
+        }
+        .content .container {
+            background-color: var(--background-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+            height: 100%;
+        }
+        .content .container .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .content .container .row .column {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+        .content .container .row.content-header {
+            text-align: center;
+        }
+        .content .container .row.content-header h1{
+            font-size: 20px;
+            margin: 0 auto 20px;
+        }
+
+        .content .container .row.new-version {
+            background-color: var(--secondary-background-color);
+            margin-left: -10px;
+            margin-right: -10px;
+            margin-bottom: -10px;
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 20px;
         }
 
         .image img {
@@ -45,8 +125,25 @@
             width: 100%;
             height: 100%;
         }
+
+        .inputField {
+            margin: 20px 0;
+            border: 2px dashed var(--text-color);
+            padding: 20px;
+            font-family: monospace;
+            border-radius: 10px;
+            background-color: var(--background-color);
+
+        }
+        .inputField.textArea {
+            height: 100%;
+            max-height: 25vh;
+            overflow-y: scroll;
+            word-break: break-all;
+        }
     </style>
     <script>
+
 
         function getValue() {
 
@@ -54,27 +151,65 @@
             const color = ["#FFCFD2", "#F1C0E8","#CFBAF0","#A3C4F3", "#90DBF4", "#98F5E1", "#8EECF5", "#98F5E1" , "#FFCFD2", "#F1C0E8" ];
             document.getElementById("inputText").style.backgroundColor = color[Math.floor(Math.random() * 10)];
             document.getElementById("inputText").innerHTML = Math.floor(Math.random() * 10000);
+            document.getElementById("storeBtn").disabled = false
 
         }
 
         function storeValue() {
-            console.log("store value");
+            console.log("storing value..");
             var xmlHttp = new XMLHttpRequest();
             var valueToStore = document.getElementById("inputText").innerHTML;
             console.log("value to store: " + valueToStore);
             xmlHttp.open("POST", "/store?value="+valueToStore, false);
             xmlHttp.send(null);
+            document.getElementById("storeBtn").disabled = true
             getStoredValues();
-            getValue();
         }
 
-        
+        function init(){
+            document.getElementById("clearBtn").hidden = true;
+            document.getElementById("storeBtn").disabled = true;
+            document.getElementById("averageDiv").hidden = true;
+            document.getElementById("avgBtn").hidden = true;
+
+            if(hasQueryParams(getCurrentURL())){
+                document.getElementById("clearBtn").hidden = false;
+                document.getElementById("averageDiv").hidden = false;
+                document.getElementById("avgBtn").hidden = false;
+
+            }
+
+            getStoredValues();
+        }
+
+        function getCurrentURL () {
+            console.log(window.location.href)
+            return window.location.href
+        }
+
+        function hasQueryParams(url) {
+            console.log(url.indexOf('?'))
+            return url.indexOf('?') !== -1;
+        }
+
+        function getAverage() {
+            console.log("calculating average...")
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", "/avg", false);
+            xmlHttp.send(null);
+            const color = ["#FFCFD2", "#F1C0E8","#CFBAF0","#A3C4F3", "#90DBF4", "#98F5E1", "#8EECF5", "#98F5E1" , "#FFCFD2", "#F1C0E8" ];
+            document.getElementById("averageText").style.backgroundColor = color[Math.floor(Math.random() * 10)];
+            document.getElementById("averageText").innerHTML = xmlHttp.responseText;
+            console.log("average=" + xmlHttp.responseText)
+        }
 
         function getStoredValues() {
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.open("GET", "/values", false);
             xmlHttp.send(null);
             document.getElementById("storedValuesText").innerHTML = xmlHttp.responseText;
+            document.getElementById("inputText").innerHTML = ""
+            document.getElementById("storeBtn").disabled = true
         }
 
         function clearStoredValues() {
@@ -88,30 +223,69 @@
 
     </script>
 </head>
-<body onload="getStoredValues();">
-<div class="content">
-
-    <div>
-      Click the button to obtain value
-        <button id="getValueBtn" onclick="getValue()">Get Value</button>
-    </div>
-    <div>
-        <h1>Commit Value to Database</h1>
-        <div id="inputText" style="padding: 5vh 0; font-style: italic;">
-            
+<body onload="init();">
+<div class="background">
+    <img src="background.jpg" alt="background">
+</div>
+<div class="layout">
+    <div class="header">
+        <div class="logo">
+            <img src="logo.svg" width="80" alt="Kubecon">
+        </div>
+        <div class="qr">
+            <img src="qr.png" width="80" alt="Kubecon">
         </div>
     </div>
-    <div>
-        <button onclick="storeValue()">Store Value</button>
-        <button onclick="getValue()">Discard Value</button>
-    </div>
+    <div class="content">
+        <div class="container">
+            <div class="row content-header">
+                <h1>Version 2</h1>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <button id="getValueBtn" onclick="getValue()">Generate Value</button>
 
-    <div>
-        <h3>Stored Values</h3>
-        <div id="storedValuesText"></div>
-        <button onclick="clearStoredValues()">Clear</button>
-    </div>
 
+                    <div id="inputText" class="inputField">
+                        Click the button to generate a new value.
+                    </div>
+
+                    <div>
+                        <button id="storeBtn" onclick="storeValue()">Store Value</button>
+
+                    </div>
+                </div>
+
+
+
+                <div class="column">
+                    <h3>Values in the Database</h3>
+                    <div id="storedValuesText" class="inputField textArea">
+                        here will appear the values in the database here will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the database
+                    </div>
+
+                </div>
+            </div>
+            <div class="row new-version">
+
+                <div class="column">
+                    <div id="averageDiv2">
+                        <button id="avgBtn" onclick="getAverage()" >Calculate Average</button>
+
+
+                    </div>
+                    <button id="clearBtn" onclick="clearStoredValues()" >Clear</button>
+                </div>
+                <div class="column">
+                    <h3>Calculated Average</h3>
+                    <div id="averageText" class="inputField">Average </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 </body>
 </html>

@@ -3,12 +3,11 @@ package main
 import (
 	"crypto/tls"
 	"encoding/json"
+	"io"
 
 	"fmt"
 
 	"github.com/go-redis/redis"
-
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -71,21 +70,36 @@ func main() {
 	}
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", UIHandler).Methods("GET")
+
 	r.HandleFunc("/info", InfoHandler).Methods("GET")
+	r.HandleFunc("/avg", AverageHandler).Methods("GET")
 	r.HandleFunc("/store", StoreHandler).Methods("POST")
 	r.HandleFunc("/values", GetValuesHandler).Methods("GET")
 
 	r.HandleFunc("/clear", ClearHandler).Methods("DELETE")
-
+	r.PathPrefix("/").Handler(http.FileServer(http.Dir(os.Getenv("KO_DATA_PATH"))))
 	log.Printf("Strange app Started in port 8080!")
+
 	http.Handle("/", r)
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
 
 func InfoHandler(writer http.ResponseWriter, request *http.Request) {
 	respondWithJSON(writer, http.StatusOK, "{ 'app': 'OK' }")
+}
+
+func AverageHandler(writer http.ResponseWriter, request *http.Request) {
+	resp, err := http.Get("http://avg.default.svc.cluster.local")
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	writer.Header().Set("Content-Type", "text/html")
+	writer.WriteHeader(http.StatusOK)
+	writer.Write(body)
 }
 
 func StoreHandler(writer http.ResponseWriter, request *http.Request) {
@@ -100,15 +114,15 @@ func StoreHandler(writer http.ResponseWriter, request *http.Request) {
 
 }
 
-func UIHandler(writer http.ResponseWriter, request *http.Request) {
-	fileBytes, err := ioutil.ReadFile(os.Getenv("KO_DATA_PATH") + "/index.html")
-	if err != nil {
-		panic(err)
-	}
-	writer.WriteHeader(http.StatusOK)
-	writer.Header().Set("Content-Type", "text/html")
-	writer.Write(fileBytes)
-}
+//func UIHandler(writer http.ResponseWriter, request *http.Request) {
+//	fileBytes, err := ioutil.ReadFile(os.Getenv("KO_DATA_PATH") + "/index.html")
+//	if err != nil {
+//		panic(err)
+//	}
+//	writer.WriteHeader(http.StatusOK)
+//	writer.Header().Set("Content-Type", "text/html")
+//	writer.Write(fileBytes)
+//}
 
 func ClearHandler(writer http.ResponseWriter, request *http.Request) {
 
