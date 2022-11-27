@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <title>KubeDay Japan App</title>
     <style>
         :root {
@@ -157,27 +158,48 @@
 
         function storeValue() {
             console.log("storing value..");
-            var xmlHttp = new XMLHttpRequest();
+
             var valueToStore = document.getElementById("inputText").innerHTML;
             console.log("value to store: " + valueToStore);
+
+            var xmlHttp = new XMLHttpRequest();
             xmlHttp.open("POST", "/store?value="+valueToStore, false);
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState === 4) {
+                    document.getElementById("storeBtn").disabled = true
+                    getStoredValues();
+                    Toastify({
+                        text: "The value "+valueToStore+" was stored in the database!",
+                        duration: 3000,
+                        destination: "https://salaboy.com",
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        },
+                        onClick: function(){} // Callback after click
+                    }).showToast();
+                }};
+
             xmlHttp.send(null);
-            document.getElementById("storeBtn").disabled = true
-            getStoredValues();
+
         }
 
         function init(){
             document.getElementById("clearBtn").hidden = true;
             document.getElementById("storeBtn").disabled = true;
-            document.getElementById("averageDiv").hidden = true;
-            document.getElementById("avgBtn").hidden = true;
+         //   document.getElementById("averageDiv").hidden = true;
+          //  document.getElementById("avgBtn").hidden = true;
 
-            if(hasQueryParams(getCurrentURL())){
-                document.getElementById("clearBtn").hidden = false;
-                document.getElementById("averageDiv").hidden = false;
-                document.getElementById("avgBtn").hidden = false;
-
-            }
+            // if(hasQueryParams(getCurrentURL())){
+            //     document.getElementById("clearBtn").hidden = false;
+            //     document.getElementById("averageDiv").hidden = false;
+            //     document.getElementById("avgBtn").hidden = false;
+            //
+            // }
 
             getStoredValues();
         }
@@ -196,11 +218,29 @@
             console.log("calculating average...")
             var xmlHttp = new XMLHttpRequest();
             xmlHttp.open("GET", "/avg", false);
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState === 4) {
+                    const color = ["#FFCFD2", "#F1C0E8","#CFBAF0","#A3C4F3", "#90DBF4", "#98F5E1", "#8EECF5", "#98F5E1" , "#FFCFD2", "#F1C0E8" ];
+                    document.getElementById("averageText").style.backgroundColor = color[Math.floor(Math.random() * 10)];
+                    document.getElementById("averageText").innerHTML = xmlHttp.responseText;
+                    console.log("average=" + xmlHttp.responseText)
+                    Toastify({
+                        text: "The current average is "+xmlHttp.responseText+".",
+                        duration: 3000,
+                        destination: "https://salaboy.com",
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "center", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "linear-gradient(to right, #00b09b, #96c93d)",
+                        },
+                        onClick: function(){} // Callback after click
+                    }).showToast();
+                }};
             xmlHttp.send(null);
-            const color = ["#FFCFD2", "#F1C0E8","#CFBAF0","#A3C4F3", "#90DBF4", "#98F5E1", "#8EECF5", "#98F5E1" , "#FFCFD2", "#F1C0E8" ];
-            document.getElementById("averageText").style.backgroundColor = color[Math.floor(Math.random() * 10)];
-            document.getElementById("averageText").innerHTML = xmlHttp.responseText;
-            console.log("average=" + xmlHttp.responseText)
+
         }
 
         function getStoredValues() {
@@ -208,7 +248,7 @@
             xmlHttp.open("GET", "/values", false);
             xmlHttp.send(null);
             document.getElementById("storedValuesText").innerHTML = xmlHttp.responseText;
-            document.getElementById("inputText").innerHTML = ""
+            document.getElementById("inputText").innerHTML = "Click the button to generate a new value."
             document.getElementById("storeBtn").disabled = true
         }
 
@@ -240,6 +280,9 @@
         <div class="container">
             <div class="row content-header">
                 <h1>Version 2</h1>
+                <h2><a href="https://via.vmw.com/kubeday-japan">via.vmw.com/kubeday-japan</a></h2>
+                <h2><a href="http://mng.bz/jjKP">Continuous Delivery for Kubernetes</a></h2>
+                <h2><a href="https://github.com/salaboy/kubeday-japan-2022">Source Code and step-by-step tutorial: github.com/salaboy/kubeday-japan-2022</a></h2>
             </div>
             <div class="row">
                 <div class="column">
@@ -256,12 +299,10 @@
                     </div>
                 </div>
 
-
-
                 <div class="column">
                     <h3>Values in the Database</h3>
                     <div id="storedValuesText" class="inputField textArea">
-                        here will appear the values in the database here will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the databasehere will appear the values in the database
+
                     </div>
 
                 </div>
@@ -269,16 +310,14 @@
             <div class="row new-version">
 
                 <div class="column">
-                    <div id="averageDiv2">
+                    <div id="averageDiv">
                         <button id="avgBtn" onclick="getAverage()" >Calculate Average</button>
-
-
                     </div>
                     <button id="clearBtn" onclick="clearStoredValues()" >Clear</button>
                 </div>
                 <div class="column">
                     <h3>Calculated Average</h3>
-                    <div id="averageText" class="inputField">Average </div>
+                    <div id="averageText" class="inputField">Click the button to calculate the average. </div>
                 </div>
 
             </div>
