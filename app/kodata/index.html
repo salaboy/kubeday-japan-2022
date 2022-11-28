@@ -56,12 +56,32 @@
             justify-content: space-between;
             padding: 40px 40px 0;
         }
+        .layout .header .info {
+            color: var(--background-color);
+        }
+        .layout .header .info h1 {
+            font-size: 25px;
+        }
+        .layout .header .info h2 {
+            font-size: 18px;
+        }
+        .layout .header .info a {
+            color: var(--background-color);
+            text-decoration: underline;
+            font-weight: normal;
+        }
+        .layout .header img{
+            height: 20vh;
+        }
         h1, h2 {
             font-weight: bold;
         }
         h3 {
             font-size: 25px;
             text-transform: uppercase;
+            line-height: 86px;
+            padding: 0;
+            margin: 0;
         }
 
         button {
@@ -76,6 +96,10 @@
         button:hover {
             color: white;
             background-color: #001524;
+        }
+        button:disabled {
+            color: white;
+            background-color: var(--secondary-background-color);
         }
 
         .content {
@@ -98,10 +122,16 @@
             justify-content: space-between;
             gap: 40px;
         }
+        .content .container .row.main {
+            height: 100%;
+        }
         .content .container .row .column {
             width: 50%;
             display: flex;
             flex-direction: column;
+        }
+        .content .container .row .column .last {
+            margin-bottom: 20px;
         }
         .content .container .row.content-header {
             text-align: center;
@@ -134,13 +164,76 @@
             font-family: monospace;
             border-radius: 10px;
             background-color: var(--background-color);
+            height: 100%;
+            max-height: 25vh;
 
         }
         .inputField.textArea {
             height: 100%;
-            max-height: 25vh;
+            
             overflow-y: scroll;
             word-break: break-all;
+        }
+        @media only screen and (max-width: 800px) {
+            body {
+                font-size: 16px;
+            }
+            h3 {
+                font-size: 15px;
+                text-transform: uppercase;
+                line-height: 20px;
+                padding: 0;
+                margin: 0;
+            }
+            .layout .header {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 10px 0;
+            }
+            .layout .header .qr{
+                display: none; 
+            }
+            .layout .header .info{
+                text-align: left;
+                margin-left: 20px;
+            }
+            .layout .header .info h1 {
+                font-size: 15px;
+            }
+            .layout .header .info h2 {
+                font-size: 12px;
+            }
+            .layout .header .logo img{
+                width: 150px;
+            }
+            .content {
+
+                padding: 10px;
+                margin-bottom: 10px;
+                height: auto;
+            }
+            .content .container {
+                
+                padding: 10px;
+                
+            }
+            .content .container .row {
+                gap: 20px;
+                flex-direction: column;
+            }
+            .content .container .row .column {
+                width: 100%;
+            }
+            button {
+                font-size: 25px;
+                padding: 15px ;
+                border-radius: 10px;
+               text-transform: uppercase;
+               font-weight: bold;
+            }
+            
+             
+
         }
     </style>
     <script>
@@ -189,18 +282,7 @@
         }
 
         function init(){
-            document.getElementById("clearBtn").hidden = true;
             document.getElementById("storeBtn").disabled = true;
-         //   document.getElementById("averageDiv").hidden = true;
-          //  document.getElementById("avgBtn").hidden = true;
-
-            // if(hasQueryParams(getCurrentURL())){
-            //     document.getElementById("clearBtn").hidden = false;
-            //     document.getElementById("averageDiv").hidden = false;
-            //     document.getElementById("avgBtn").hidden = false;
-            //
-            // }
-
             getStoredValues();
         }
 
@@ -270,21 +352,24 @@
 <div class="layout">
     <div class="header">
         <div class="logo">
-            <img src="logo.svg" width="80" alt="Kubecon">
+            <img src="logo.svg" alt="Kubecon">
+        </div>
+        <div class="info">
+            <h1>KubeDay Japan Version 2 .0</h1>
+                <h2><a href="https://via.vmw.com/kubeday-japan">via.vmw.com/kubeday-japan</a></h2>
+                <h2><a href="http://mng.bz/jjKP">Continuous Delivery for Kubernetes Book</a></h2>
+                <h2><a href="https://github.com/salaboy/kubeday-japan-2022">Step-by-step tutorial: github.com/salaboy/kubeday-japan-2022</a></h2>
         </div>
         <div class="qr">
-            <img src="qr.png" width="80" alt="Kubecon">
+            <img src="qr.png" alt="Kubecon">
         </div>
     </div>
     <div class="content">
         <div class="container">
             <div class="row content-header">
-                <h1>Version 2</h1>
-                <h2><a href="https://via.vmw.com/kubeday-japan">via.vmw.com/kubeday-japan</a></h2>
-                <h2><a href="http://mng.bz/jjKP">Continuous Delivery for Kubernetes</a></h2>
-                <h2><a href="https://github.com/salaboy/kubeday-japan-2022">Source Code and step-by-step tutorial: github.com/salaboy/kubeday-japan-2022</a></h2>
+                
             </div>
-            <div class="row">
+            <div class="row main">
                 <div class="column">
                     <button id="getValueBtn" onclick="getValue()">Generate Value</button>
 
@@ -293,8 +378,8 @@
                         Click the button to generate a new value.
                     </div>
 
-                    <div>
-                        <button id="storeBtn" onclick="storeValue()">Store Value</button>
+                    <div class="last">
+                        <button id="storeBtn" disabled onclick="storeValue()">Store Value</button>
 
                     </div>
                 </div>
@@ -313,7 +398,6 @@
                     <div id="averageDiv">
                         <button id="avgBtn" onclick="getAverage()" >Calculate Average</button>
                     </div>
-                    <button id="clearBtn" onclick="clearStoredValues()" >Clear</button>
                 </div>
                 <div class="column">
                     <h3>Calculated Average</h3>

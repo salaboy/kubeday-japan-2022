@@ -18,7 +18,7 @@ spec:
                   name: {{ .Release.Name }}-redis-x-default-x-{{ .Values.teamName }}
                   key: redis-password
                   optional: false
-          image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:5598016e4fc111258b36c2480ed2aea71a51581815b423c7557e3204681b8c7e
+          image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:ed0f4d543ae7dc5b68b3df0862e929768f75228af92192317ff7aa21ad485d06
           livenessProbe:
             httpGet:
               path: /info
