@@ -8,7 +8,7 @@ After setting up all the tools that we need, this tutorial is divided into three
 - [Creating and Deploying a Function without writing Dockerfiles or YAML files](#requesting-a-new-environment)
 - [Our Function Goes to Production using GitOps](#our-function-goes-to-production)
 
-> But before you jump into the demos, you need to make sure that you follow the [Prerequisites and Installation Guide](prerequisites.md).
+> But before you jump into the demos, you need to make sure that you follow the [Prerequisites and Installation Guide](prerequisites.md). The pre-requisites and installation guide has also some useful information about the tools that have been used to create this demo.
 
 ## Requesting a New Environment 
 
@@ -163,6 +163,7 @@ Once the function is synced by ArgoCD you should be able to point your browser t
 **Our change made it to production!**
 
 If you want to now update the Application to consume the function that we have deployed, you will need another PR changing the app.yaml file to use the following container `image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:5b2ceca7cfe5f2ed875d595d9ad4b874c5cdc4518d54a94028ca673a3b2a0f36`. Now every time that a new value is stored into the database, a call to `AVG function` will include all the stored values. 
+
 
 # Resources and Links
 
