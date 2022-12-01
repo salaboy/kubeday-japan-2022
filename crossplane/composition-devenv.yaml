@@ -127,7 +127,7 @@ spec:
             chart:
               name: kubeday-japan-app
               repository: https://salaboy.github.io/helm/
-              version: "v0.1.0"
+              version: "v0.1.1"
             values:
               domainName: 35.200.223.12.sslip.io
             namespace: default

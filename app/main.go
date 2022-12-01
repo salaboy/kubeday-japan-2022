@@ -91,7 +91,7 @@ func InfoHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func AverageHandler(writer http.ResponseWriter, request *http.Request) {
-	resp, err := http.Get("http://avg.default.svc.cluster.local")
+	resp, err := http.Get("http://avg.production.svc.cluster.local")
 	if err != nil {
 		panic(err)
 	}
@@ -114,15 +114,6 @@ func StoreHandler(writer http.ResponseWriter, request *http.Request) {
 
 }
 
-//func UIHandler(writer http.ResponseWriter, request *http.Request) {
-//	fileBytes, err := ioutil.ReadFile(os.Getenv("KO_DATA_PATH") + "/index.html")
-//	if err != nil {
-//		panic(err)
-//	}
-//	writer.WriteHeader(http.StatusOK)
-//	writer.Header().Set("Content-Type", "text/html")
-//	writer.Write(fileBytes)
-//}
 
 func ClearHandler(writer http.ResponseWriter, request *http.Request) {
 

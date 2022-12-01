@@ -1,0 +1,41 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  labels:
+    function.knative.dev: "true"
+    function.knative.dev/name: avg
+    function.knative.dev/runtime: go
+  name: avg
+  namespace: production
+spec:
+  template:
+    metadata:
+      labels:
+        function.knative.dev: "true"
+        function.knative.dev/name: avg
+        function.knative.dev/runtime: go
+    spec:
+      containerConcurrency: 0
+      containers:
+      - env:
+        - name: BUILT
+          value: 20221123T083030
+        - name: REDIS_HOST
+          value: 10.180.243.245:6379
+        image: docker.io/salaboy/avg@sha256:272722198c98fe4282de74bed45c965bed044b765579a6eb40451e590358efc7
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: 0
+        name: user-container
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: 0
+          successThreshold: 1
+        resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
