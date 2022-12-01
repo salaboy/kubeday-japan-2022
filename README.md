@@ -10,9 +10,16 @@ After setting up all the tools that we need, this tutorial is divided into three
 
 > But before you jump into the demos, you need to make sure that you follow the [Prerequisites and Installation Guide](prerequisites.md). The pre-requisites and installation guide has also some useful information about the tools that have been used to create this demo.
 
+After you followed the installation instruction you should be able to point your browser to [http://app.production.127.0.0.1.sslip.io](http://app.production.127.0.0.1.sslip.io) and access the production version of the application.
+
+![production environment](imgs/production.png)
+
+
+
 ## Requesting a New Environment 
 
 (Make sure that you are connected to our Platform Cluster that we configured in [Prerequisites and Installation Guide](prerequisites.md))
+
 
 To request a new `Environment` using our Platfrom API, you need to create a new `Environment` resource like this one: 
 
@@ -51,7 +58,7 @@ team-a-env   true   True     False   devenvs.salaboy.com   4s
 
 Before connecting to the environment you need to wait for it to be fully provisioned `(`READY = True`).
 
-Depending on which tools the platform is using to provision the environment you will have different mechanism to connect to it. For this demo, we are using [VCluster]()
+Depending on which tools the platform is using to provision the environment you will have different mechanism to connect to it. For this demo, we are using [VCluster](https://vcluster.com)
 hence we will run the following command to connect to it when it is ready:
 
 On Linux with `bash`:
@@ -79,7 +86,8 @@ app    http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io   app-x-d
 
 ```
 
-If you point your browser to [http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io](http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io) you can use the application inside your development environment.
+If you point your browser to [http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io](http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io) you can use the application inside your development environment. Try it by generating some values and check that the values are stored in the database.
+
 
 We can now create a function and deploy it to our freshly created **Development Environment**.
 

@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: production-environment
+spec:
+  destination:
+    name: in-cluster
+    namespace: production
+    server: ''
+  source:
+    path: production
+    repoURL: 'https://github.com/salaboy/kubeday-japan-production-kind/'
+    targetRevision: HEAD
+  project: default

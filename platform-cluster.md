@@ -23,6 +23,13 @@ You can create the production namespace by running:
 kubectl create ns production
 ```
 
+In our production environment we will install a Redis instance using helm. 
+
+```
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install my-redis bitnami/redis --set architecture=standalone -n production
+```
+
 Next we will install Crossplane so that we can provision infrastructure using a declarative approach.
 
 ## Installing Crossplane
@@ -150,7 +157,7 @@ To simplify the demo, we will create a `production` namespace inside our platfor
 Let's now configure our production environment ArgoCD application. The following file points to a [GitHub repository](https://github.com/salaboy/kubecon-production) that contains our production environment configurations. Feel free to change this to use your own repository and then run: 
 
 ```
-kubectl apply -f argocd/production-env.yaml -n argocd
+kubectl apply -f argocd/production-env-kind.yaml -n argocd
 ```
 
 You should  be able to see the `Production Environment` ArgoCD application in the dashboard. Feel free to sync it now and see if the application gets deployed to the production environment. If you are running on KinD, the URL of the application running in the `production` environment should be this one [http://app.production.127.0.0.1.sslip.io](http://app.production.127.0.0.1.sslip.io)

@@ -19,9 +19,9 @@ For this demo, we will create a Kubernetes cluster to host the platform tools wh
 For this demo, our platform will enable development teams to request new `Environment`s by interacting with our Platform APIs. 
 
 To host all the Platform tools we will use a KinD cluster (local). Inside this cluster we will install the following tools: 
-- [Crossplane]()
-- [Knative Serving]()
-- [ArgoCD]()
+- [Crossplane](https://crossplane.io)
+- [Knative Serving](https://knative.dev)
+- [ArgoCD](https://argoproj.github.io/)
 
 For the sake of simplicity, we will be also creating a `production` namespace to simulate a different environment. 
 
