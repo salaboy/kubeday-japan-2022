@@ -43,4 +43,4 @@ The Crossplane Composition that we have defined and configured in our Platform C
 
 The VCluster created for each development `Environment` is using the VCluster Knative Serving Plugin to enable teams to use Knative Serving inside the virtual cluster, but without having Knative Serving installed. The VCluster Knative Serving plugin shares the Knative Serving installation in the host cluster with all of the virtual clusters.
 
-Now we are ready to request environments, deploy our applications/functions, and promote them to production. 
+Now we are ready to request environments, deploy our applications/functions, and promote them to production. You can go back to the main tutorial to [request a new development environment](README.md#requesting-a-new-environment).
