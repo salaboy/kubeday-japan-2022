@@ -16,7 +16,7 @@ spec:
           value: 20220924T112015
         - name: REDIS_HOST
           value: 10.180.243.245:6379
-        image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:5b2ceca7cfe5f2ed875d595d9ad4b874c5cdc4518d54a94028ca673a3b2a0f36
+        image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:448f2441af8f30f16e0fa22b98b77930f1495636220459a636509ed17c5f8b84
         livenessProbe:
           httpGet:
             path: /info
