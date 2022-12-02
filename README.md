@@ -2,6 +2,7 @@
 
 On this step-by-step tutorial we are going to setup up and use a Function-as-a-Service (FaaS) platform. Development teams can request their development environments, create and deploy their functions that can be later promoted to our production environment using a GitOps approach. 
 
+
 After setting up all the tools that we need, this tutorial is divided into three main sections: 
 
 - [Requesting a New Environment (FaaS Enabled)](#requesting-a-new-environment)
@@ -14,7 +15,7 @@ After you followed the installation instruction you should be able to point your
 
 ![production environment](imgs/production.png)
 
-
+Now the business decide to add a new feature, for that application development teams will need new environments to do their work. In the next section we will go through the steps to request a new environment and connecting to it. 
 
 ## Requesting a New Environment 
 
@@ -56,7 +57,7 @@ NAME         DB     SYNCED   READY   COMPOSITION           AGE
 team-a-env   true   True     False   devenvs.salaboy.com   4s
 ```
 
-Before connecting to the environment you need to wait for it to be fully provisioned `(`READY = True`).
+Before connecting to the environment you need to wait for it to be fully provisioned (`READY = True`).
 
 Depending on which tools the platform is using to provision the environment you will have different mechanism to connect to it. For this demo, we are using [VCluster](https://vcluster.com)
 hence we will run the following command to connect to it when it is ready:
@@ -71,7 +72,7 @@ or on Mac OSX with `zsh`:
 vcluster connect team-a-env --server https://localhost:8443 -- zsh
 ```
 
-We just used VCluster to connect to our `Environment`, therefor now we can use `kubectl` as usual (try `kubectl get namespaces` to check that you are in a different cluster). But instead of using `kubectl`. (you try `kubectl get nodes` to see that you are connected to a different cluster)
+We just used the VCluster CLI to connect to our `Environment`, therefor now we can use `kubectl` as usual (try `kubectl get namespaces` to check that you are in a different cluster). But instead of using `kubectl`. (you try `kubectl get nodes` to see that you are connected to a different cluster)
 
 Once you are connected, you can run the following command to obtain the application running inside our freshly development environment:
 
@@ -87,6 +88,8 @@ app    http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io   app-x-d
 ```
 
 If you point your browser to [http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io](http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io) you can use the application inside your development environment. Try it by generating some values and check that the values are stored in the database.
+
+
 
 
 We can now create a function and deploy it to our freshly created **Development Environment**.
