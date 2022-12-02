@@ -1,0 +1,41 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+  name: app
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "2"    
+    spec:
+      containerConcurrency: 0
+      containers:
+      - env:
+        - name: BUILT
+          value: 20220924T112015
+        - name: REDIS_HOST
+          value: my-redis-master:6379
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: my-redis
+              key: redis-password
+              optional: false
+        image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:5b2ceca7cfe5f2ed875d595d9ad4b874c5cdc4518d54a94028ca673a3b2a0f36
+        livenessProbe:
+          httpGet:
+            path: /info
+            port: 0
+        name: user-container
+        readinessProbe:
+          httpGet:
+            path: /info
+            port: 0
+          successThreshold: 1
+        resources: {}
+      enableServiceLinks: false
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100

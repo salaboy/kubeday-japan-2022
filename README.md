@@ -89,7 +89,7 @@ app    http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io   app-x-d
 
 If you point your browser to [http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io](http://app-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io) you can use the application inside your development environment. Try it by generating some values and check that the values are stored in the database.
 
-
+![team a environment](imgs/team-a-env.png)
 
 
 We can now create a function and deploy it to our freshly created **Development Environment**.
@@ -133,6 +133,7 @@ Before the command ends, it gives us the URL of where the function is running. N
 curl http://avg-x-default-x-team-a-env.team-a-env.127.0.0.1.sslip.io
 ```
 
+![](imgs/curl-avg-function.png)
 
 You have just created and deployed a function to the `team-a-env` envrionment!
 This function is connecting to the Redis database in our development environment and calculating the average of all the numbers that are stored there, but how do we promote this function to our production environment?  
@@ -145,7 +146,7 @@ When we want to promote new applications, services or functions into our product
 
 To achieve this, the platform team is using a GitOps approach to configure what is deployed to production. This means that a Git repository is used to host the configuration of our Production Environment. This allow the platform team to quickly replicate these configurations in different clusters and geographical regions if needed. 
 
-The repository used for this demo can be found here: [KubeDay Japan Production](https://github.com/salaboy/kubeday-japan-production/). If you are running this demo, it is recommended for you to fork this repository or create your own repository to host your production configurations.
+The repository used for this demo can be found here: [GitOps KubeDay Japan Production for KinD](https://github.com/salaboy/kubeday-japan-production-kind/). If you are running this demo, it is recommended for you to fork this repository or create your own repository to host your production configurations.
 
 This repository contains the configurations used to run our Monolith Application, you can find this inside the `production` directory. 
 
@@ -153,27 +154,49 @@ This configuration is synced (maybe automatically) with a live cluster, removing
 
 This approach enable teams in charge of keeping the production environment safe to apply changes by only modifying the configuration files located in this repository. If something goes wrong they can revert back to a stable state by reverting commits in the repository. 
 
-To deploy the function that we have just created to our production environment, we send a pull request to our production environment [GitHub repository](https://github.com/salaboy/kubeday-japan-production). This pull request contains the configuration required to deploy our new function to the production environment. 
+To deploy the function that we have just created to our production environment, we send a pull request to our production environment [GitHub repository](https://github.com/salaboy/kubeday-japan-production-kind). This pull request contains the configuration required to deploy our new function to the production environment. 
  
 By sending a Pull Request adding the function configurations file, we can enable automated tests on the platform to check if the changes are production-ready. Once the changes are validated, the pull request can be merged. 
 
-[Check this example pull request that changes the configuration of the application to use our new function image](https://github.com/salaboy/kubeday-japan-production/pull/1/files). 
+[Check this example pull request that changes the configuration of the application to use our new function image](https://github.com/salaboy/kubeday-japan-production-kind/pull/1/files). 
 
+This is how the PR looks in GitHub,
+![pr-desc.png](imgs/pr-desc.png)
 
-![pr.png](imgs/pr.png)
+We only added a single file that describe how to deploy our function using a Knative Service resource.
+![pr-content.png](imgs/pr-content.png)
 
-Once the changes are merged into the `main` branch of our repository, ArgoCD will sync these configuration changes. This causes our function to be deployed and automatically available for our users to interact with. 
+The content if this PR for KinD can be found in the file [avg-function-kind.yaml](avg-function-kind.yaml).
 
-![pr-changes](imgs/pr-changes.png)
+Once the changes are merged into the `main` branch of our repository, ArgoCD can sync these configuration changes. This causes our function to be deployed and automatically available for our users to interact with. 
 
+If you refresh the application inside the ArgoCD dashboard after merging the Pull Request you will see that the application is out of sync: 
 
-If you push new configuration changes inside the `/production` directory, you can use ArgoCD to sync these changes to the production cluster, without the need of using `kubectl` to the production namespace directly. 
+![](imgs/argo-out-of-sync.png)
 
-Once the function is synced by ArgoCD you should be able to point your browser to [https://avg.production.127.0.0.1.sslip.io/](https://avg.production.127.0.0.1.sslip.io/) to see the new version of the application up and running! 
+Hit the Sync button to sync the new configurations to the production mamespace. 
+
+Once the function is synced by ArgoCD you ca interact with it by running:
+
+```
+curl http://avg.production.127.0.0.1.sslip.io/
+``` 
+
+![](imgs/curl-avg-in-prod.png)
+
+Notice that the average here is calculated with the data coming from the production environment.
 
 **Our change made it to production!**
 
-If you want to now update the Application to consume the function that we have deployed, you will need another PR changing the app.yaml file to use the following container `image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:5b2ceca7cfe5f2ed875d595d9ad4b874c5cdc4518d54a94028ca673a3b2a0f36`. Now every time that a new value is stored into the database, a call to `AVG function` will include all the stored values. 
+Finally, if you want to  update the Application User Interface (UI) to consume the function that we have just deployed, you will need another PR changing the `app.yaml` file to use the following container `image: salaboy/app-c863bf8a26a07de0524697b6de429c8c@sha256:448f2441af8f30f16e0fa22b98b77930f1495636220459a636509ed17c5f8b84`. The changes for this PR can be found in the file [app-v2-kind.yaml](app-v2-kind.yaml). Or check the [example PR here](https://github.com/salaboy/kubeday-japan-production-kind/pull/2).
+
+Make sure you refresh the application in ArgoCD and sync the changes.
+
+![](imgs/app-v2.png)
+
+
+
+Congrats! you made it all the way from the development environment to running your functions and changes in front of your users! :party:
 
 
 # Resources and Links
