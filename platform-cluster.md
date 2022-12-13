@@ -44,6 +44,14 @@ helm repo update
 helm install crossplane --namespace crossplane-system --create-namespace crossplane-stable/crossplane --wait
 ```
 
+Install the `kubectl crossplane` plugin: 
+
+```
+curl -sL https://raw.githubusercontent.com/crossplane/crossplane/master/install.sh | sh
+sudo mv kubectl-crossplane /usr/local/bin
+```
+
+Then install the Crossplane Helm provider: 
 ```
 kubectl crossplane install provider crossplane/provider-helm:v0.10.0
 ```
