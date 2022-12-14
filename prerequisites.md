@@ -2,6 +2,7 @@
 
 This tutorial creates and interacts with Kubernetes clusters, as well as installs Helm Charts. Hence, the following tools are needed: 
 - [Install `kubectl`](https://kubernetes.io/docs/tasks/tools/)
+- [Install `kind`](https://kind.sigs.k8s.io/docs/user/quick-start/#installation)
 - [Install `helm`](https://helm.sh/docs/intro/install/) 
 - [Install `docker`](https://docs.docker.com/engine/install/)
 
