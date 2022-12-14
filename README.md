@@ -2,6 +2,8 @@
 
 On this step-by-step tutorial we are going to setup up and use a Function-as-a-Service (FaaS) platform. Development teams can request their development environments, create and deploy their functions that can be later promoted to our production environment using a GitOps approach. 
 
+You can follow this video with all the steps: [https://youtu.be/ObNe9VirzA0](https://youtu.be/ObNe9VirzA0)
+
 
 After setting up all the tools that we need, this tutorial is divided into three main sections: 
 
